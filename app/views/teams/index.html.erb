@@ -1,0 +1,50 @@
+<% flash.each do |type, msg| %>
+  <div class="alert alert-<%= type %>">
+    <%= msg %>
+  </div>
+<% end %>
+<div class="teams">
+  <%= link_to 'Add Team','javascript:void(0)', class: "btn btn-info add_team" %>
+  <% if @teams.present? %>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Name</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @teams.each do |team| %>
+          <tr>
+            <td><%= team.name %></td>
+            <td><%= link_to 'Delete', team_path(team), method: :DELETE %></td>
+            <td><%= link_to 'Edit', edit_team_path(team), method: :PUT %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
+<%= render partial: "team_dialog" %>
+
+<script>
+  $(document).ready(function() {
+    $('.add_team').click(function() {
+      $('#teams_dialog').show();
+      $('.create_team').click(function() {
+        var teamName = $(".team_name").val();
+
+        $.ajax({
+          url: '/teams',
+          type: "POST",
+          data: { name: teamName }
+        });
+      });
+
+      $('.cancel').click(function() {
+        $('#teams_dialog').hide();      
+      });
+    });
+  });
+</script>
